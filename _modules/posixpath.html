@@ -140,7 +140,7 @@
 <span class="c1"># Ignore the previous parts if a part is absolute.</span>
 <span class="c1"># Insert a &#39;/&#39; unless the first part is empty or already ends in &#39;/&#39;.</span>
 
-<div class="viewcode-block" id="join"><a class="viewcode-back" href="../_generated/gmnspy.validate.html#gmnspy.in_out.join">[docs]</a><span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="o">*</span><span class="n">p</span><span class="p">):</span>
+<div class="viewcode-block" id="join"><a class="viewcode-back" href="../_generated/gmnspy.schema.html#gmnspy.in_out.join">[docs]</a><span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="o">*</span><span class="n">p</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Join two or more pathname components, inserting &#39;/&#39; as needed.</span>
 <span class="sd">    If any component is an absolute path, all previous path components</span>
 <span class="sd">    will be discarded.  An empty last part will result in a path that</span>
@@ -219,7 +219,7 @@
 
 <span class="c1"># Return the head (dirname) part of a path, same as split(path)[0].</span>
 
-<div class="viewcode-block" id="dirname"><a class="viewcode-back" href="../_generated/gmnspy.validate.html#gmnspy.in_out.dirname">[docs]</a><span class="k">def</span> <span class="nf">dirname</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+<div class="viewcode-block" id="dirname"><a class="viewcode-back" href="../_generated/gmnspy.schema.html#gmnspy.in_out.dirname">[docs]</a><span class="k">def</span> <span class="nf">dirname</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Returns the directory component of a pathname&quot;&quot;&quot;</span>
     <span class="n">p</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
     <span class="n">sep</span> <span class="o">=</span> <span class="n">_get_sep</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
@@ -457,7 +457,7 @@
 <span class="c1"># Return a canonical path (i.e. the absolute location of a file on the</span>
 <span class="c1"># filesystem).</span>
 
-<div class="viewcode-block" id="realpath"><a class="viewcode-back" href="../_generated/gmnspy.validate.html#gmnspy.in_out.realpath">[docs]</a><span class="k">def</span> <span class="nf">realpath</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+<div class="viewcode-block" id="realpath"><a class="viewcode-back" href="../_generated/gmnspy.schema.html#gmnspy.in_out.realpath">[docs]</a><span class="k">def</span> <span class="nf">realpath</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return the canonical path of the specified filename, eliminating any</span>
 <span class="sd">symbolic links encountered in the path.&quot;&quot;&quot;</span>
     <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
