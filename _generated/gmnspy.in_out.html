@@ -49,6 +49,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../autodoc.html#core-functions">Core Functions</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">gmnspy.in_out</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#gmnspy.in_out.apply_schema_to_df"><code class="docutils literal notranslate"><span class="pre">apply_schema_to_df()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gmnspy.in_out.check_allowed_uses"><code class="docutils literal notranslate"><span class="pre">check_allowed_uses()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#gmnspy.in_out.check_required_files"><code class="docutils literal notranslate"><span class="pre">check_required_files()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#gmnspy.in_out.dirname"><code class="docutils literal notranslate"><span class="pre">dirname()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#gmnspy.in_out.join"><code class="docutils literal notranslate"><span class="pre">join()</span></code></a></li>
@@ -139,6 +140,22 @@ originating_file (i.e. link, node)</p></li>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gmnspy.in_out.check_allowed_uses">
+<span class="sig-prename descclassname"><span class="pre">gmnspy.in_out.</span></span><span class="sig-name descname"><span class="pre">check_allowed_uses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gmns_net_d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raise_error</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gmnspy/validation/allowed_uses.html#check_allowed_uses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gmnspy.in_out.check_allowed_uses" title="Permalink to this definition"></a></dt>
+<dd><p>Checks allowed_uses fields to make sure that they only contain values (or lists of
+values) which are defined in use_definition or use_group.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gmns_net_d</strong> – Dictionary containing dataframes of all the GMNS tables
+for the network keyed to their file names (i.e. “link”).</p></li>
+<li><p><strong>raise_error</strong> – Raises error if error found</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -255,7 +272,7 @@ their specified schema including foreign keys between the tables.</p>
 specifying the “name”, “path”, and “schema” for each GMNS table as
 well as a boolean value for “required”. If not specified, assumes
 it is in a subdirectory “spec/gmns.spec.json”</p></li>
-<li><p><strong>raise_error</strong> – <p>Raises error if missing folder</p>
+<li><p><strong>raise_error</strong> – <p>Raises error if error found</p>
 <p>Example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
   <span class="s2">&quot;resources&quot;</span><span class="p">:</span> <span class="p">[</span>

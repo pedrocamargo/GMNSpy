@@ -101,7 +101,7 @@
              
   <section id="gmns-schema">
 <h1>GMNS Schema<a class="headerlink" href="#gmns-schema" title="Permalink to this heading"></a></h1>
-<p>Schema for General Network Feed Specification.</p>
+<p>Schema for General Network Modeling Specification.</p>
 <section id="files-in-specification">
 <h2>Files in Specification<a class="headerlink" href="#files-in-specification" title="Permalink to this heading"></a></h2>
 <p>GMNS consists of a package of files as defined in the following table.</p>
@@ -276,9 +276,9 @@ schema standards.</p>
 <span class="w">              </span><span class="p">}</span><span class="w"></span>
 <span class="w">        </span><span class="p">},</span><span class="w"></span>
 <span class="w">        </span><span class="p">{</span><span class="w"></span>
-<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;road_link_id&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;link_id&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;any&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Required. Foreign key to road_links. The link that the segment is located on.&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Required. Foreign key to link table. The link that the segment is located on.&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">            </span><span class="nt">&quot;foreign_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;link.link_id&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">            </span><span class="nt">&quot;constraints&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">              </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
@@ -396,7 +396,7 @@ schema standards.</p>
 <td>-</td>
 <td>number</td>
 <td>-</td>
-<td>Optional. Altitude in short_length units.</td>
+<td>Optional. Altitude.</td>
 <td>-</td>
 </tr>
 <tr>
@@ -1734,7 +1734,7 @@ schema standards.</p>
 <tr>
 <td>timeday_id</td>
 <td>-</td>
-<td>any</td>
+<td>string</td>
 <td>Table: <code>timeday</code>, Variable: <code>timeday_id</code></td>
 <td>Time of day set. Used if times-of-day are defined on the time_set_definitions table</td>
 <td>-</td>
@@ -1798,7 +1798,7 @@ schema standards.</p>
 <tr>
 <td>penalty</td>
 <td>-</td>
-<td>number</td>
+<td>any</td>
 <td>-</td>
 <td>Turn penalty (seconds)</td>
 <td>-</td>
@@ -1806,7 +1806,7 @@ schema standards.</p>
 <tr>
 <td>capacity</td>
 <td>-</td>
-<td>number</td>
+<td>any</td>
 <td>-</td>
 <td>Capacity in vehicles per hour.</td>
 <td>-</td>
@@ -1822,7 +1822,7 @@ schema standards.</p>
 <tr>
 <td>mvmt_code</td>
 <td>-</td>
-<td>string</td>
+<td>any</td>
 <td>-</td>
 <td>Optional. Movement code (e.g., SBL).  Syntax is DDTN, where DD is the direction (e.g., SB, NB, EB, WB, NE, NW, SE, SW). T is the turning movement (e.g., R, L, T) and N is an optional turning movement number (e.g., distinguishing between bearing right and a sharp right at a 6-way intersection)</td>
 <td>-</td>
@@ -2406,7 +2406,7 @@ schema standards.</p>
 <tr>
 <td>name</td>
 <td>-</td>
-<td>string</td>
+<td>any</td>
 <td>-</td>
 <td>Optional.</td>
 <td>-</td>
@@ -2470,7 +2470,7 @@ schema standards.</p>
 <tr>
 <td>penalty</td>
 <td>-</td>
-<td>number</td>
+<td>any</td>
 <td>-</td>
 <td>Turn penalty (seconds)</td>
 <td>-</td>
@@ -2478,7 +2478,7 @@ schema standards.</p>
 <tr>
 <td>capacity</td>
 <td>-</td>
-<td>number</td>
+<td>any</td>
 <td>-</td>
 <td>Capacity in vehicles per hour.</td>
 <td>-</td>
@@ -2486,7 +2486,7 @@ schema standards.</p>
 <tr>
 <td>ctrl_type</td>
 <td>-</td>
-<td>string</td>
+<td>any</td>
 <td>-</td>
 <td>Optional. .</td>
 <td>Allowed Values: <code>no_control,yield,stop,stop_2_way,stop_4_way,signal_with_RTOR,signal</code></td>
@@ -2494,7 +2494,7 @@ schema standards.</p>
 <tr>
 <td>mvmt_code</td>
 <td>-</td>
-<td>string</td>
+<td>any</td>
 <td>-</td>
 <td>Optional. Movement code (e.g., SBL).  Syntax is DDTN, where DD is the direction (e.g., SB, NB, EB, WB, NE, NW, SE, SW). T is the turning movement (e.g., R, L, T) and N is an optional turning movement number (e.g., distinguishing between bearing right and a sharp right at a 6-way intersection)</td>
 <td>-</td>
@@ -2512,7 +2512,7 @@ schema standards.</p>
 <td>-</td>
 <td>any</td>
 <td>-</td>
-<td>Optional. Movement geometry, in well-known text (WKT) format. Optionally, other formats supported by geopandas (GeoJSON, PostGIS) may be used if specified in geometry_field_format in gmns.spec.json</td>
+<td>Optional. Movement geometry, specific format could be WKT, GeoJSON, etc.</td>
 <td>-</td>
 </tr>
 </tbody>

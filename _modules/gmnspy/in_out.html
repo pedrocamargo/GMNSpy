@@ -75,8 +75,8 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">from</span> <span class="nn">gmnspy.utils</span> <span class="kn">import</span> <span class="n">logger</span>
-<span class="kn">from</span> <span class="nn">gmnspy.validation</span> <span class="kn">import</span> <span class="n">update_resources_based_on_existance</span>
 <span class="kn">from</span> <span class="nn">gmnspy.validation</span> <span class="kn">import</span> <span class="n">validate_foreign_keys</span><span class="p">,</span> <span class="n">check_required_files</span><span class="p">,</span> <span class="n">apply_schema_to_df</span>
+<span class="kn">from</span> <span class="nn">gmnspy.validation</span> <span class="kn">import</span> <span class="n">check_allowed_uses</span><span class="p">,</span> <span class="n">update_resources_based_on_existance</span>
 <span class="kn">from</span> <span class="nn">.schema</span> <span class="kn">import</span> <span class="n">read_config</span>
 
 <span class="n">spec_folder</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">dirname</span><span class="p">(</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s2">&quot;spec&quot;</span><span class="p">)</span>
@@ -116,7 +116,7 @@
 <span class="sd">            specifying the &quot;name&quot;, &quot;path&quot;, and &quot;schema&quot; for each GMNS table as</span>
 <span class="sd">            well as a boolean value for &quot;required&quot;. If not specified, assumes</span>
 <span class="sd">            it is in a subdirectory &quot;spec/gmns.spec.json&quot;</span>
-<span class="sd">        raise_error: Raises error if missing folder</span>
+<span class="sd">        raise_error: Raises error if error found</span>
 
 <span class="sd">            Example:</span>
 <span class="sd">            ::</span>
@@ -151,12 +151,14 @@
     <span class="n">resource_df</span> <span class="o">=</span> <span class="n">update_resources_based_on_existance</span><span class="p">(</span><span class="n">resource_df</span><span class="p">)</span>
 
     <span class="c1"># read each csv to a df and validate format</span>
-    <span class="c1"># todo add paired schema</span>
     <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">resource_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-        <span class="n">gmns_net_d</span><span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">read_gmns_csv</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;fullpath&quot;</span><span class="p">])</span>
+        <span class="n">gmns_net_d</span><span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">read_gmns_csv</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;fullpath&quot;</span><span class="p">],</span> <span class="n">schema_file</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;fullpath_schema&quot;</span><span class="p">])</span>
 
     <span class="c1"># validate foreign keys</span>
     <span class="n">validate_foreign_keys</span><span class="p">(</span><span class="n">gmns_net_d</span><span class="p">,</span> <span class="n">resource_df</span><span class="p">,</span> <span class="n">raise_error</span><span class="p">)</span>
+
+    <span class="c1"># check allowed uses</span>
+    <span class="n">check_allowed_uses</span><span class="p">(</span><span class="n">gmns_net_d</span><span class="p">,</span> <span class="n">raise_error</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">gmns_net_d</span></div>
 </pre></div>
