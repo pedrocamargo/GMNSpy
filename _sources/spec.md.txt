@@ -162,7 +162,7 @@ Example:
 |mvmt_tod_id|True|any|-|Primary key.|-|
 |mvmt_id|True|any|Table: `movement`, Variable: `mvmt_id`|The referenced movement.|-|
 |time_day|-|string|-|Time of day in XXXXXXXX_HHMM_HHMM format, where XXXXXXXX is a bitmap of days of the week, Sunday-Saturday, Holiday. The HHMM are the start and end times.|-|
-|timeday_id|-|string|Table: `timeday`, Variable: `timeday_id`|Time of day set. Used if times-of-day are defined on the time_set_definitions table|-|
+|timeday_id|-|any|Table: `timeday`, Variable: `timeday_id`|Time of day set. Used if times-of-day are defined on the time_set_definitions table|-|
 |ib_link_id|True|any|Table: `link`, Variable: `link_id`|Inbound link id.|-|
 |start_ib_lane|-|integer|-|Innermost lane number the movement applies to at the inbound end.|-|
 |end_ib_lane|-|integer|-|Outermost lane number the movement applies to at the inbound end. Blank indicates a movement with a single inbound lane.|-|
@@ -170,10 +170,10 @@ Example:
 |start_ob_lane|-|integer|-|Innermost lane number the movement applies to at the outbound end.|-|
 |end_ob_lane|-|integer|-|Outermost lane number the movement applies to at the outbound end. Blank indicates a movement with a single outbound lane.|-|
 |type|True|string|-|Optional. Describes the type of movement (left, right, thru, etc.).|Allowed Values: `left,right,uturn,thru,merge`|
-|penalty|-|any|-|Turn penalty (seconds)|-|
-|capacity|-|any|-|Capacity in vehicles per hour.|-|
+|penalty|-|number|-|Turn penalty (seconds)|-|
+|capacity|-|number|-|Capacity in vehicles per hour.|-|
 |ctrl_type|-|any|-|Optional. .|Allowed Values: `no_control,yield,stop,stop_2_way,stop_4_way,signal_with_RTOR,signal`|
-|mvmt_code|-|any|-|Optional. Movement code (e.g., SBL).  Syntax is DDTN, where DD is the direction (e.g., SB, NB, EB, WB, NE, NW, SE, SW). T is the turning movement (e.g., R, L, T) and N is an optional turning movement number (e.g., distinguishing between bearing right and a sharp right at a 6-way intersection)|-|
+|mvmt_code|-|string|-|Optional. Movement code (e.g., SBL).  Syntax is DDTN, where DD is the direction (e.g., SB, NB, EB, WB, NE, NW, SE, SW). T is the turning movement (e.g., R, L, T) and N is an optional turning movement number (e.g., distinguishing between bearing right and a sharp right at a 6-way intersection)|-|
 |allowed_uses|-|string|-|Optional. Set of allowed uses that should appear in either the use_definition or use_group tables; comma-separated.|-|
 
 
@@ -235,7 +235,7 @@ Example:
 |name|-|string|-||-|
 |x_coord|True|number|-|Coordinate system specified in config file (longitude, UTM-easting etc.)|-|
 |y_coord|True|number|-|Coordinate system specified in config file (latitude, UTM-northing etc.)|-|
-|z_coord|-|number|-|Optional. Altitude.|-|
+|z_coord|-|number|-|Optional. Altitude in short_length units.|-|
 |node_type|-|string|-|Optional. What it represents (intersection, transit station, park & ride).|-|
 |ctrl_type|-|string|-|Optional. Intersection control type - one of ControlType_Set.|Allowed Values: `none,yield,stop,4_stop,signal`|
 |zone_id|-|any|Table: `zone`, Variable: `zone_id`|Optional. Could be a Transportation Analysis Zone (TAZ) or city, or census tract, or census block.|-|
@@ -485,7 +485,7 @@ Example:
 |---|---|---|---|---|---|
 |mvmt_id|True|any|-|Primary key.|-|
 |node_id|True|any|Table: `node`, Variable: `node_id`|The node representing the junction.|-|
-|name|-|any|-|Optional.|-|
+|name|-|string|-|Optional.|-|
 |ib_link_id|True|any|Table: `link`, Variable: `link_id`|Inbound link id.|-|
 |start_ib_lane|-|integer|-|Innermost lane number the movement applies to at the inbound end.|-|
 |end_ib_lane|-|integer|-|Outermost lane number the movement applies to at the inbound end. Blank indicates a movement with a single inbound lane.|-|
@@ -493,9 +493,9 @@ Example:
 |start_ob_lane|-|integer|-|Innermost lane number the movement applies to at the outbound end.|-|
 |end_ob_lane|-|integer|-|Outermost lane number the movement applies to at the outbound end. Blank indicates a movement with a single outbound lane.|-|
 |type|True|string|-|Optional. Describes the type of movement (left, right, thru, etc.).|Allowed Values: `left,right,uturn,thru,merge,diverge`|
-|penalty|-|any|-|Turn penalty (seconds)|-|
-|capacity|-|any|-|Capacity in vehicles per hour.|-|
-|ctrl_type|-|any|-|Optional. .|Allowed Values: `no_control,yield,stop,stop_2_way,stop_4_way,signal_with_RTOR,signal`|
-|mvmt_code|-|any|-|Optional. Movement code (e.g., SBL).  Syntax is DDTN, where DD is the direction (e.g., SB, NB, EB, WB, NE, NW, SE, SW). T is the turning movement (e.g., R, L, T) and N is an optional turning movement number (e.g., distinguishing between bearing right and a sharp right at a 6-way intersection)|-|
+|penalty|-|number|-|Turn penalty (seconds)|-|
+|capacity|-|number|-|Capacity in vehicles per hour.|-|
+|ctrl_type|-|string|-|Optional. .|Allowed Values: `no_control,yield,stop,stop_2_way,stop_4_way,signal_with_RTOR,signal`|
+|mvmt_code|-|string|-|Optional. Movement code (e.g., SBL).  Syntax is DDTN, where DD is the direction (e.g., SB, NB, EB, WB, NE, NW, SE, SW). T is the turning movement (e.g., R, L, T) and N is an optional turning movement number (e.g., distinguishing between bearing right and a sharp right at a 6-way intersection)|-|
 |allowed_uses|-|string|-|Optional. Set of allowed uses that should appear in either the use_definition or use_group tables; comma-separated.|-|
-|geometry|-|any|-|Optional. Movement geometry, specific format could be WKT, GeoJSON, etc.|-|
+|geometry|-|any|-|Optional. Movement geometry, in well-known text (WKT) format. Optionally, other formats supported by geopandas (GeoJSON, PostGIS) may be used if specified in geometry_field_format in gmns.spec.json|-|
