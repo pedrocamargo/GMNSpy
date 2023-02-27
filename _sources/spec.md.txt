@@ -122,113 +122,18 @@ Example:
 ```
 
 
-## use_group
-
-
-|name|required|type|foreign_key|description|
-|---|---|---|---|---|
-|use_group|True|string|-|Primary key.|
-|uses|True|string|-|Comma-separated list of uses.|
-|description|-|string|-|Optional.|
-
-
-## signal_controller
-
-
-|name|required|type|foreign_key|description|
-|---|---|---|---|---|
-|controller_id|True|any|-|Primary key.|
-
-
-## signal_timing_plan
-
-
-|name|required|type|foreign_key|description|constraints maximum|constraints minimum|
-|---|---|---|---|---|---|---|
-|timing_plan_id|True|any|-|Primary key.|-|-|
-|controller_id|True|any|Table: `signal_controller`, Variable: `controller_id`|Required. Foreign key (signal_controller table).|-|-|
-|timeday_id|-|any|Table: `time_set_definitions`, Variable: `timeday_id`|Conditionally required (either timeday_id or time_day). Foreign key to time_set_definitions.|-|-|
-|time_day|-|any|-|Conditionally required (either timeday_id or time_day). XXXXXXXX_HHMM_HHMM, where XXXXXXXX is a bitmap of days of the week, Sunday-Saturday, Holiday. The HHMM are the start and end times.|-|-|
-|cycle_length|-|number|-|Cycle length in seconds.|600|0|
-
-
-## lane
+## signal_coordination
 
 
 |name|required|type|foreign_key|description|constraints enum|constraints maximum|constraints minimum|
 |---|---|---|---|---|---|---|---|
-|lane_id|True|any|-|Primary key|-|-|-|
-|link_id|True|any|Table: `link`, Variable: `link_id`|Required. Foreign key to link table.|-|-|-|
-|lane_num|True|integer|-|Required. e.g., -1, 1, 2 (use left-to-right numbering).|-|10|-10|
-|allowed_uses|-|string|-|Optional. Set of allowed uses that should appear in either the use_definition or use_group tables; comma-separated.|-|-|-|
-|r_barrier|-|string|-|Optional. Whether a barrier exists to prevent vehicles from changing lanes to the right.<br>- `none` (the default). Indicates that a vehicle can change lanes, provided that the vehicle-type is permitted in the destination lane<br>- `regulatory`. There is a regulatory prohibition (e.g., a double-white solid line) against changing lanes, but no physical barrier<br>- `physical`. A physical barrier (e.g., a curb, Jersey barrier) is in place.|Allowed Values: `none,regulatory,physical`|-|-|
-|l_barrier|-|string|-|Optional. Whether a barrier exists to prevent vehicles from changing lanes to the right.<br>- `none` (the default). Indicates that a vehicle can change lanes, provided that the vehicle-type is permitted in the destination lane<br>- `regulatory`. There is a regulatory prohibition (e.g., a double-white solid line) against changing lanes, but no physical barrier<br>- `physical`. A physical barrier (e.g., a curb, Jersey barrier) is in place.|Allowed Values: `none,regulatory,physical`|-|-|
-|width|-|number|-|Optional. Width of the lane, short_length units.|-|-|0|
-
-
-## link
-
-
-|name|required|type|foreign_key|description|constraints enum|constraints maximum|constraints minimum|warning maximum|warning minimum|warnings maximum|warnings minimum|
-|---|---|---|---|---|---|---|---|---|---|---|---|
-|link_id|True|any|-|Primary key - could be SharedStreets Reference ID|-|-|-|-|-|-|-|
-|parent_link_id|-|any|Variable: `link_id`|Optional. The parent of this link. For example,for a sidewalk, this is the adjacent road.|-|-|-|-|-|-|-|
-|name|-|string|-|Optional. Street or Path Name|-|-|-|-|-|-|-|
-|from_node_id|True|any|Table: `node`, Variable: `node_id`|-|-|-|-|-|-|-|-|
-|to_node_id|True|any|Table: `node`, Variable: `node_id`|-|-|-|-|-|-|-|-|
-|directed|-|boolean|-|Required. Whether the link is directed (travel only occurs from the from_node to the to_node) or undirected.|-|-|-|-|-|-|-|
-|geometry_id|-|any|Table: `geometry`, Variable: `geometry_id`|Optional. Foreign key (Link_Geometry table).|-|-|-|-|-|-|-|
-|geometry|-|any|-|Optional. Link geometry, in well-known text (WKT) format. Optionally, other formats supported by geopandas (GeoJSON, PostGIS) may be used if specified in geometry_field_format in gmns.spec.json|-|-|-|-|-|-|-|
-|dir_flag|-|integer|-|Optional. <br>1  shapepoints go from from_node to to_node;<br>-1 shapepoints go in the reverse direction;<br>0  link is undirected or no geometry information is provided.|Allowed Values: `-1,0,1`|-|-|-|-|-|-|
-|length|-|number|-|Optional. Length of the link in long_length units|-|-|0|-|-|-|-|
-|grade|-|number|-|% grade, negative is downhill|-|100|-100|-|-|25|-25|
-|facility_type|-|string|-|Facility type (e.g., freeway, arterial, etc.)|-|-|-|-|-|-|-|
-|capacity|-|number|-|Optional. Capacity (veh / hr / lane)|-|-|0|-|-|-|-|
-|free_speed|-|number|-|Optional. Free flow speed, in long_length units per hour|-|200|0|-|-|120|1|
-|lanes|-|integer|-|Optional. Number of permanent lanes (not including turn pockets) in the direction of travel open to motor vehicles. It does not include bike lanes, shoulders or parking lanes.|-|-|0|-|-|-|-|
-|bike_facility|-|string|-|Optional. Type of bicycle accommodation: unknown, none, wcl, sharrow, bikelane, cycletrack, offstreet path|Allowed Values: `unknown,none,wcl,sharrow,bikelane,cycletrack,offstreet_path`|-|-|-|-|-|-|
-|ped_facility|-|string|-|Optional. Type of pedestrian accommodation: unknown, none, shoulder, sidewalk, offstreet path|Allowed Values: `unknown,none,shoulder,sidewalk,offstreet_path`|-|-|-|-|-|-|
-|parking|-|string|-|Optional. Type of parking: unknown, none, parallel, angle, other|Allowed Values: `unknown,none,parallel,angle,other`|-|-|-|-|-|-|
-|allowed_uses|-|string|-|Optional. Set of allowed uses that should appear in either the use_definition or use_group tables; comma-separated.|-|-|-|-|-|-|-|
-|toll|-|number|-|Optional.  Toll on the link, in currency units.|-|-|-|10000|0|-|-|
-|jurisdiction|-|string|-|Optional.  Owner/operator of the link.|-|-|-|-|-|-|-|
-|row_width|-|number|-|Optional. Width (short_length units) of the entire right-of-way (both directions).|-|-|0|-|-|-|10|
-
-
-## geometry
-
-
-|name|required|type|foreign_key|description|
-|---|---|---|---|---|
-|geometry_id|True|any|-|Primary key - could be SharedStreets Geometry ID|
-|geometry|-|any|-|Link geometry, in well-known text (WKT) format.  Optionally, other formats supported by geopandas (GeoJSON, PostGIS) may be used if specified in geometry_field_format in gmns.spec.json.|
-
-
-## zone
-
-
-|name|required|type|foreign_key|description|
-|---|---|---|---|---|
-|zone_id|True|any|-|Primary key.|
-|name|-|string|-|Optional.|
-|boundary|-|any|-|Optional. The polygon geometry of the zone in WKT or Polygon.|
-|super_zone|-|string|Variable: `zone_id`|Optional. If there is a hierarchy of zones (e.g., parcels and TAZs), indicates the zone of next higher level.|
-
-
-## segment_lane_tod
-
-
-|name|required|type|foreign_key|description|constraints enum|constraints maximum|constraints minimum|
-|---|---|---|---|---|---|---|---|
-|segment_lane_tod_id|True|any|-|Primary key.|-|-|-|
-|segment_lane_id|True|any|Table: `segment_lane`, Variable: `segment_lane_id`|Required. Foreign key, segment_lane table|-|-|-|
-|timeday_id|-|any|Table: `time_set_definitions`, Variable: `timeday_id`|Conditionally required (either timeday_id or time_day). Foreign key to time_set_definitions.|-|-|-|
-|time_day|-|string|-|Conditionally required (either timeday_id or time_day). XXXXXXXX_HHMM_HHMM, where XXXXXXXX is a bitmap of days of the week, Sunday-Saturday, Holiday. The HHMM are the start and end times.|-|-|-|
-|lane_num|True|integer|-|Required. Lane number identified as offset to the right from the centerline. i.e. -1, 1, 2 (use left-to-rightnumbering).|-|10|-10|
-|allowed_uses|-|string|-|Optional. Set of allowed uses that should appear in either the use_definition or use_group tables; comma-separated.|-|-|-|
-|r_barrier|-|string|-|Optional. Whether a barrier exists to prevent vehicles from changing lanes to the right.<br>- `none` (the default). Indicates that a vehicle can change lanes, provided that the vehicle-type is permitted in the destination lane<br>- `Regulatory`. There is a regulatory prohibition (e.g., a double-white solid line) against changing lanes, but no physical barrier<br>- `Physical`. A physical barrier (e.g., a curb, Jersey barrier) is in place.|Allowed Values: `none,regulatory,physical`|-|-|
-|l_barrier|-|string|-|Optional. Whether a barrier exists to prevent vehicles from changing lanes to the right.<br>- `none` (the default). Indicates that a vehicle can change lanes, provided that the vehicle-type is permitted in the destination lane<br>- `Regulatory`. There is a regulatory prohibition (e.g., a double-white solid line) against changing lanes, but no physical barrier<br>- `Physical`. A physical barrier (e.g., a curb, Jersey barrier) is in place.|Allowed Values: `none,regulatory,physical`|-|-|
-|width|-|number|-|Optional. Width of the lane, short_length units.|-|-|0|
+|coordination_id|True|any|-|Primary key.|-|-|-|
+|timing_plan_id|True|any|Table: `signal_timing_plan`, Variable: `timing_plan_id`|Required. Foreign key (Signal_timing_plan table).|-|-|-|
+|controller_id|True|any|Table: `signal_controller`, Variable: `controller_id`|Required. Foreign key (signal_controller table).|-|-|-|
+|coord_contr_id|-|any|Table: `signal_controller`, Variable: `controller_id`|Optional. For coordinated signals, the master signal controller for coordination.|-|-|-|
+|coord_phase|-|integer|-|Optional. For coordinated signals, the phase at which coordination starts (time 0).|-|32|0|
+|coord_ref_to|-|string|-|Optional. For coordinated signals, the part of the phase where coordination starts: begin_of_green, begin_of_yellow, begin_of_red.|Allowed Values: `begin_of_green,begin_of_yellow,begin_of_red`|-|-|
+|offset|-|number|-|Optional. Offset in seconds.|-|-|0|
 
 
 ## time_set_definitions
@@ -249,19 +154,27 @@ Example:
 |end_time|True|time|-|Required. End  time in HH:MM format.|
 
 
-## segment_lane
+## movement_tod
 
 
-|name|required|type|foreign_key|description|constraints enum|constraints maximum|constraints minimum|
-|---|---|---|---|---|---|---|---|
-|segment_lane_id|True|any|-|Primary key.|-|-|-|
-|segment_id|True|any|Table: `segment`, Variable: `segment_id`|Required. Foreign key to the associated segment.|-|-|-|
-|lane_num|True|integer|-|Required. -1, 1, 2 (use left-to-right numbering). 0 signifies a lane that is dropped on the segment.|-|10|-10|
-|parent_lane_id|-|any|-|Optional. If a lane drops or changes characteristics on the segment, the lane_id for that lane.|-|-|-|
-|allowed_uses|-|string|-|Optional. Set of allowed uses that should appear in either the use_definition or use_group tables; comma-separated.|-|-|-|
-|r_barrier|-|string|-|Optional. Whether a barrier exists to prevent vehicles from changing lanes to the right (default is none)|Allowed Values: `none,regulatory,physical`|-|-|
-|l_barrier|-|string|-|Optional. Whether a barrier exists to prevent vehicles from changing lanes to the left (default is none)|Allowed Values: `none,regulatory,physical`|-|-|
-|width|-|number|-|Optional. Width of the lane (short_length units)|-|-|0|
+|name|required|type|foreign_key|description|constraints enum|
+|---|---|---|---|---|---|
+|mvmt_tod_id|True|any|-|Primary key.|-|
+|mvmt_id|True|any|Table: `movement`, Variable: `mvmt_id`|The referenced movement.|-|
+|time_day|-|string|-|Time of day in XXXXXXXX_HHMM_HHMM format, where XXXXXXXX is a bitmap of days of the week, Sunday-Saturday, Holiday. The HHMM are the start and end times.|-|
+|timeday_id|-|string|Table: `timeday`, Variable: `timeday_id`|Time of day set. Used if times-of-day are defined on the time_set_definitions table|-|
+|ib_link_id|True|any|Table: `link`, Variable: `link_id`|Inbound link id.|-|
+|start_ib_lane|-|integer|-|Innermost lane number the movement applies to at the inbound end.|-|
+|end_ib_lane|-|integer|-|Outermost lane number the movement applies to at the inbound end. Blank indicates a movement with a single inbound lane.|-|
+|ob_link_id|True|any|Table: `link`, Variable: `link_id`|Outbound link id.|-|
+|start_ob_lane|-|integer|-|Innermost lane number the movement applies to at the outbound end.|-|
+|end_ob_lane|-|integer|-|Outermost lane number the movement applies to at the outbound end. Blank indicates a movement with a single outbound lane.|-|
+|type|True|string|-|Optional. Describes the type of movement (left, right, thru, etc.).|Allowed Values: `left,right,uturn,thru,merge`|
+|penalty|-|any|-|Turn penalty (seconds)|-|
+|capacity|-|any|-|Capacity in vehicles per hour.|-|
+|ctrl_type|-|any|-|Optional. .|Allowed Values: `no_control,yield,stop,stop_2_way,stop_4_way,signal_with_RTOR,signal`|
+|mvmt_code|-|any|-|Optional. Movement code (e.g., SBL).  Syntax is DDTN, where DD is the direction (e.g., SB, NB, EB, WB, NE, NW, SE, SW). T is the turning movement (e.g., R, L, T) and N is an optional turning movement number (e.g., distinguishing between bearing right and a sharp right at a 6-way intersection)|-|
+|allowed_uses|-|string|-|Optional. Set of allowed uses that should appear in either the use_definition or use_group tables; comma-separated.|-|
 
 
 ## segment
@@ -290,40 +203,43 @@ Example:
 |row_width|-|number|-|Optional. Width (short_length units) of the entire right-of-way (both directions).|-|-|0|-|10|
 
 
-## signal_phase_mvmt
+## lane
 
 
 |name|required|type|foreign_key|description|constraints enum|constraints maximum|constraints minimum|
 |---|---|---|---|---|---|---|---|
-|signal_phase_mvmt_id|True|any|-|Primary key.|-|-|-|
-|controller_id|True|any|Table: `signal_controller`, Variable: `controller_id`|Associated controller.|-|-|-|
-|signal_phase_num|True|integer|-|Each phase has one or more Movements associated with it.|-|32|0|
-|mvmt_id|-|any|Table: `movement`, Variable: `mvmt_id`|Foreign key. Either Movement_ID (for phases used by vehicles), or Link_id (for phases used by pedestrians) is required.|-|-|-|
-|link_id|-|any|Table: `link`, Variable: `link_id`|Foreign key. Either Movement_ID (for phases used by vehicles), or Link_id (for phases used by pedestrians) is required.|-|-|-|
-|protection|-|string|-|Optional. Indicates whether the phase is protected, permitted, or right turn on red.|Allowed Values: `protected,permitted,rtor`|-|-|
+|lane_id|True|any|-|Primary key|-|-|-|
+|link_id|True|any|Table: `link`, Variable: `link_id`|Required. Foreign key to link table.|-|-|-|
+|lane_num|True|integer|-|Required. e.g., -1, 1, 2 (use left-to-right numbering).|-|10|-10|
+|allowed_uses|-|string|-|Optional. Set of allowed uses that should appear in either the use_definition or use_group tables; comma-separated.|-|-|-|
+|r_barrier|-|string|-|Optional. Whether a barrier exists to prevent vehicles from changing lanes to the right.<br>- `none` (the default). Indicates that a vehicle can change lanes, provided that the vehicle-type is permitted in the destination lane<br>- `regulatory`. There is a regulatory prohibition (e.g., a double-white solid line) against changing lanes, but no physical barrier<br>- `physical`. A physical barrier (e.g., a curb, Jersey barrier) is in place.|Allowed Values: `none,regulatory,physical`|-|-|
+|l_barrier|-|string|-|Optional. Whether a barrier exists to prevent vehicles from changing lanes to the right.<br>- `none` (the default). Indicates that a vehicle can change lanes, provided that the vehicle-type is permitted in the destination lane<br>- `regulatory`. There is a regulatory prohibition (e.g., a double-white solid line) against changing lanes, but no physical barrier<br>- `physical`. A physical barrier (e.g., a curb, Jersey barrier) is in place.|Allowed Values: `none,regulatory,physical`|-|-|
+|width|-|number|-|Optional. Width of the lane, short_length units.|-|-|0|
 
 
-## movement
+## geometry
+
+
+|name|required|type|foreign_key|description|
+|---|---|---|---|---|
+|geometry_id|True|any|-|Primary key - could be SharedStreets Geometry ID|
+|geometry|-|any|-|Link geometry, in well-known text (WKT) format.  Optionally, other formats supported by geopandas (GeoJSON, PostGIS) may be used if specified in geometry_field_format in gmns.spec.json.|
+
+
+## node
 
 
 |name|required|type|foreign_key|description|constraints enum|
 |---|---|---|---|---|---|
-|mvmt_id|True|any|-|Primary key.|-|
-|node_id|True|any|Table: `node`, Variable: `node_id`|The node representing the junction.|-|
-|name|-|any|-|Optional.|-|
-|ib_link_id|True|any|Table: `link`, Variable: `link_id`|Inbound link id.|-|
-|start_ib_lane|-|integer|-|Innermost lane number the movement applies to at the inbound end.|-|
-|end_ib_lane|-|integer|-|Outermost lane number the movement applies to at the inbound end. Blank indicates a movement with a single inbound lane.|-|
-|ob_link_id|True|any|Table: `link`, Variable: `link_id`|Outbound link id.|-|
-|start_ob_lane|-|integer|-|Innermost lane number the movement applies to at the outbound end.|-|
-|end_ob_lane|-|integer|-|Outermost lane number the movement applies to at the outbound end. Blank indicates a movement with a single outbound lane.|-|
-|type|True|string|-|Optional. Describes the type of movement (left, right, thru, etc.).|Allowed Values: `left,right,uturn,thru,merge,diverge`|
-|penalty|-|any|-|Turn penalty (seconds)|-|
-|capacity|-|any|-|Capacity in vehicles per hour.|-|
-|ctrl_type|-|any|-|Optional. .|Allowed Values: `no_control,yield,stop,stop_2_way,stop_4_way,signal_with_RTOR,signal`|
-|mvmt_code|-|any|-|Optional. Movement code (e.g., SBL).  Syntax is DDTN, where DD is the direction (e.g., SB, NB, EB, WB, NE, NW, SE, SW). T is the turning movement (e.g., R, L, T) and N is an optional turning movement number (e.g., distinguishing between bearing right and a sharp right at a 6-way intersection)|-|
-|allowed_uses|-|string|-|Optional. Set of allowed uses that should appear in either the use_definition or use_group tables; comma-separated.|-|
-|geometry|-|any|-|Optional. Movement geometry, specific format could be WKT, GeoJSON, etc.|-|
+|node_id|True|any|-|Primary key|-|
+|name|-|string|-||-|
+|x_coord|True|number|-|Coordinate system specified in config file (longitude, UTM-easting etc.)|-|
+|y_coord|True|number|-|Coordinate system specified in config file (latitude, UTM-northing etc.)|-|
+|z_coord|-|number|-|Optional. Altitude.|-|
+|node_type|-|string|-|Optional. What it represents (intersection, transit station, park & ride).|-|
+|ctrl_type|-|string|-|Optional. Intersection control type - one of ControlType_Set.|Allowed Values: `none,yield,stop,4_stop,signal`|
+|zone_id|-|any|Table: `zone`, Variable: `zone_id`|Optional. Could be a Transportation Analysis Zone (TAZ) or city, or census tract, or census block.|-|
+|parent_node_id|-|any|Variable: `node_id`|Optional. Associated node. For example, if this node is a sidewalk, a parent_nodek_id could represent the intersection  it is associated with.|-|
 
 
 ## link_tod
@@ -343,68 +259,6 @@ Example:
 |parking|-|string|-|Optional. Type of parking: unknown, none, parallel, angle, other|Allowed Values: `unknown,none,parallel,angle,other`|-|-|-|-|-|-|
 |allowed_uses|-|string|-|Optional. Set of allowed uses that should appear in either the use_definition or use_group tables; comma-separated.|-|-|-|-|-|-|-|
 |toll|-|number|-|toll in currency units.|-|-|-|10000|0|-|-|
-
-
-## node
-
-
-|name|required|type|foreign_key|description|constraints enum|
-|---|---|---|---|---|---|
-|node_id|True|any|-|Primary key|-|
-|name|-|string|-||-|
-|x_coord|True|number|-|Coordinate system specified in config file (longitude, UTM-easting etc.)|-|
-|y_coord|True|number|-|Coordinate system specified in config file (latitude, UTM-northing etc.)|-|
-|z_coord|-|number|-|Optional. Altitude.|-|
-|node_type|-|string|-|Optional. What it represents (intersection, transit station, park & ride).|-|
-|ctrl_type|-|string|-|Optional. Intersection control type - one of ControlType_Set.|Allowed Values: `none,yield,stop,4_stop,signal`|
-|zone_id|-|any|Table: `zone`, Variable: `zone_id`|Optional. Could be a Transportation Analysis Zone (TAZ) or city, or census tract, or census block.|-|
-|parent_node_id|-|any|Variable: `node_id`|Optional. Associated node. For example, if this node is a sidewalk, a parent_nodek_id could represent the intersection  it is associated with.|-|
-
-
-## lane_tod
-
-
-|name|required|type|foreign_key|description|constraints enum|constraints maximum|constraints minimum|
-|---|---|---|---|---|---|---|---|
-|lane_tod_id|True|any|-|Primary key.|-|-|-|
-|lane_id|True|any|Table: `lane`, Variable: `lane_id`|Required. Foreign key to `lane`|-|-|-|
-|timeday_id|-|any|Table: `time_set_definitions`, Variable: `timeday_id`|Conditionally required (either timeday_id or time_day). Foreign key to time_set_definitions.|-|-|-|
-|time_day|-|string|-|Conditionally required (either timeday_id or time_day). XXXXXXXX_HHMM_HHMM, where XXXXXXXX is a bitmap of days of the week, Sunday-Saturday, Holiday. The HHMM are the start and end times.|-|-|-|
-|lane_num|True|integer|-|Required. Lane number identified as offset to the right from the centerline. i.e. -1, 1, 2 (use left-to-rightnumbering).|-|10|-10|
-|allowed_uses|-|string|-|Optional. Set of allowed uses that should appear in either the use_definition or use_group tables; comma-separated.|-|-|-|
-|r_barrier|-|string|-|Optional. Whether a barrier exists to prevent vehicles from changing lanes to the right.<br>- `none` (the default). Indicates that a vehicle can change lanes, provided that the vehicle-type is permitted in the destination lane<br>- `Regulatory`. There is a regulatory prohibition (e.g., a double-white solid line) against changing lanes, but no physical barrier<br>- `Physical`. A physical barrier (e.g., a curb, Jersey barrier) is in place.|Allowed Values: `none,regulatory,physical`|-|-|
-|l_barrier|-|string|-|Optional. Whether a barrier exists to prevent vehicles from changing lanes to the right.<br>- `none` (the default).  Indicates that a vehicle can change lanes, provided that the vehicle-type is permitted in the destination lane<br>- `Regulatory`. There is a regulatory prohibition (e.g., a double-white solid line) against changing lanes, but no physical barrier<br>- `Physical`. A physical barrier (e.g., a curb, Jersey barrier) is in place.|Allowed Values: `none,regulatory,physical`|-|-|
-|width|-|number|-|Optional. Width of the lane, short_length units.|-|-|0|
-
-
-## use_definition
-
-
-|name|required|type|foreign_key|description|constraints minimum|
-|---|---|---|---|---|---|
-|use|True|string|-|Primary key|-|
-|persons_per_vehicle|True|number|-|Required.|0|
-|pce|True|number|-|Required. Passenger car equivalent.|0|
-|special_conditions|-|string|-|Optional.|-|
-|description|-|string|-|Optional |-|
-
-
-## signal_detector
-
-
-|name|required|type|foreign_key|description|
-|---|---|---|---|---|
-|detector_id|True|any|-|Primary key.|
-|controller_id|True|any|Table: `signal_controller`, Variable: `controller_id`|Required. Foreign key to signal_controller table.|
-|signal_phase_num|True|integer|-|Required. Number of the associated phase.|
-|link_id|True|any|Table: `link`, Variable: `link_id`|Foreign key. The link covered by the detector.|
-|start_lane|True|integer|-|Left-most lane covered by the detector.|
-|end_lane|-|integer|-|Right-most lane covered by the detector (blank if only one lane).|
-|ref_node_id|True|any|Table: `node`, Variable: `node_id`|The detector is on the approach to this node.|
-|det_zone_lr|True|number|-|Required. Distance from from the stop bar to detector in short_length units.|
-|det_zone_front|-|number|-|Optional. Linear reference of front of detection zone in short_length units.|
-|det_zone_back|-|number|-|Optional. Linear reference of back of detection zone in short_length units.|
-|det_type|-|string|-|Optional. Type of detector.|
 
 
 ## segment_tod
@@ -428,27 +282,26 @@ Example:
 |allowed_uses|-|string|-|Optional. Set of allowed uses that should appear in either the use_definition or use_group tables; comma-separated.|-|-|-|-|-|
 
 
-## movement_tod
+## use_definition
 
 
-|name|required|type|foreign_key|description|constraints enum|
+|name|required|type|foreign_key|description|constraints minimum|
 |---|---|---|---|---|---|
-|mvmt_tod_id|True|any|-|Primary key.|-|
-|mvmt_id|True|any|Table: `movement`, Variable: `mvmt_id`|The referenced movement.|-|
-|time_day|-|string|-|Time of day in XXXXXXXX_HHMM_HHMM format, where XXXXXXXX is a bitmap of days of the week, Sunday-Saturday, Holiday. The HHMM are the start and end times.|-|
-|timeday_id|-|string|Table: `timeday`, Variable: `timeday_id`|Time of day set. Used if times-of-day are defined on the time_set_definitions table|-|
-|ib_link_id|True|any|Table: `link`, Variable: `link_id`|Inbound link id.|-|
-|start_ib_lane|-|integer|-|Innermost lane number the movement applies to at the inbound end.|-|
-|end_ib_lane|-|integer|-|Outermost lane number the movement applies to at the inbound end. Blank indicates a movement with a single inbound lane.|-|
-|ob_link_id|True|any|Table: `link`, Variable: `link_id`|Outbound link id.|-|
-|start_ob_lane|-|integer|-|Innermost lane number the movement applies to at the outbound end.|-|
-|end_ob_lane|-|integer|-|Outermost lane number the movement applies to at the outbound end. Blank indicates a movement with a single outbound lane.|-|
-|type|True|string|-|Optional. Describes the type of movement (left, right, thru, etc.).|Allowed Values: `left,right,uturn,thru,merge`|
-|penalty|-|any|-|Turn penalty (seconds)|-|
-|capacity|-|any|-|Capacity in vehicles per hour.|-|
-|ctrl_type|-|any|-|Optional. .|Allowed Values: `no_control,yield,stop,stop_2_way,stop_4_way,signal_with_RTOR,signal`|
-|mvmt_code|-|any|-|Optional. Movement code (e.g., SBL).  Syntax is DDTN, where DD is the direction (e.g., SB, NB, EB, WB, NE, NW, SE, SW). T is the turning movement (e.g., R, L, T) and N is an optional turning movement number (e.g., distinguishing between bearing right and a sharp right at a 6-way intersection)|-|
-|allowed_uses|-|string|-|Optional. Set of allowed uses that should appear in either the use_definition or use_group tables; comma-separated.|-|
+|use|True|string|-|Primary key|-|
+|persons_per_vehicle|True|number|-|Required.|0|
+|pce|True|number|-|Required. Passenger car equivalent.|0|
+|special_conditions|-|string|-|Optional.|-|
+|description|-|string|-|Optional |-|
+
+
+## use_group
+
+
+|name|required|type|foreign_key|description|
+|---|---|---|---|---|
+|use_group|True|string|-|Primary key.|
+|uses|True|string|-|Comma-separated list of uses.|
+|description|-|string|-|Optional.|
 
 
 ## signal_timing_phase
@@ -487,15 +340,162 @@ Example:
 |gtfs_stop_id|-|string|-|Optional. Foreign Key to GTFS data. For bus stops and transit station entrances, provides a link to the General Transit Feed Specification.|-|
 
 
-## signal_coordination
+## segment_lane
 
 
 |name|required|type|foreign_key|description|constraints enum|constraints maximum|constraints minimum|
 |---|---|---|---|---|---|---|---|
-|coordination_id|True|any|-|Primary key.|-|-|-|
-|timing_plan_id|True|any|Table: `signal_timing_plan`, Variable: `timing_plan_id`|Required. Foreign key (Signal_timing_plan table).|-|-|-|
-|controller_id|True|any|Table: `signal_controller`, Variable: `controller_id`|Required. Foreign key (signal_controller table).|-|-|-|
-|coord_contr_id|-|any|Table: `signal_controller`, Variable: `controller_id`|Optional. For coordinated signals, the master signal controller for coordination.|-|-|-|
-|coord_phase|-|integer|-|Optional. For coordinated signals, the phase at which coordination starts (time 0).|-|32|0|
-|coord_ref_to|-|string|-|Optional. For coordinated signals, the part of the phase where coordination starts: begin_of_green, begin_of_yellow, begin_of_red.|Allowed Values: `begin_of_green,begin_of_yellow,begin_of_red`|-|-|
-|offset|-|number|-|Optional. Offset in seconds.|-|-|0|
+|segment_lane_id|True|any|-|Primary key.|-|-|-|
+|segment_id|True|any|Table: `segment`, Variable: `segment_id`|Required. Foreign key to the associated segment.|-|-|-|
+|lane_num|True|integer|-|Required. -1, 1, 2 (use left-to-right numbering). 0 signifies a lane that is dropped on the segment.|-|10|-10|
+|parent_lane_id|-|any|-|Optional. If a lane drops or changes characteristics on the segment, the lane_id for that lane.|-|-|-|
+|allowed_uses|-|string|-|Optional. Set of allowed uses that should appear in either the use_definition or use_group tables; comma-separated.|-|-|-|
+|r_barrier|-|string|-|Optional. Whether a barrier exists to prevent vehicles from changing lanes to the right (default is none)|Allowed Values: `none,regulatory,physical`|-|-|
+|l_barrier|-|string|-|Optional. Whether a barrier exists to prevent vehicles from changing lanes to the left (default is none)|Allowed Values: `none,regulatory,physical`|-|-|
+|width|-|number|-|Optional. Width of the lane (short_length units)|-|-|0|
+
+
+## signal_timing_plan
+
+
+|name|required|type|foreign_key|description|constraints maximum|constraints minimum|
+|---|---|---|---|---|---|---|
+|timing_plan_id|True|any|-|Primary key.|-|-|
+|controller_id|True|any|Table: `signal_controller`, Variable: `controller_id`|Required. Foreign key (signal_controller table).|-|-|
+|timeday_id|-|any|Table: `time_set_definitions`, Variable: `timeday_id`|Conditionally required (either timeday_id or time_day). Foreign key to time_set_definitions.|-|-|
+|time_day|-|any|-|Conditionally required (either timeday_id or time_day). XXXXXXXX_HHMM_HHMM, where XXXXXXXX is a bitmap of days of the week, Sunday-Saturday, Holiday. The HHMM are the start and end times.|-|-|
+|cycle_length|-|number|-|Cycle length in seconds.|600|0|
+
+
+## signal_detector
+
+
+|name|required|type|foreign_key|description|
+|---|---|---|---|---|
+|detector_id|True|any|-|Primary key.|
+|controller_id|True|any|Table: `signal_controller`, Variable: `controller_id`|Required. Foreign key to signal_controller table.|
+|signal_phase_num|True|integer|-|Required. Number of the associated phase.|
+|link_id|True|any|Table: `link`, Variable: `link_id`|Foreign key. The link covered by the detector.|
+|start_lane|True|integer|-|Left-most lane covered by the detector.|
+|end_lane|-|integer|-|Right-most lane covered by the detector (blank if only one lane).|
+|ref_node_id|True|any|Table: `node`, Variable: `node_id`|The detector is on the approach to this node.|
+|det_zone_lr|True|number|-|Required. Distance from from the stop bar to detector in short_length units.|
+|det_zone_front|-|number|-|Optional. Linear reference of front of detection zone in short_length units.|
+|det_zone_back|-|number|-|Optional. Linear reference of back of detection zone in short_length units.|
+|det_type|-|string|-|Optional. Type of detector.|
+
+
+## signal_controller
+
+
+|name|required|type|foreign_key|description|
+|---|---|---|---|---|
+|controller_id|True|any|-|Primary key.|
+
+
+## zone
+
+
+|name|required|type|foreign_key|description|
+|---|---|---|---|---|
+|zone_id|True|any|-|Primary key.|
+|name|-|string|-|Optional.|
+|boundary|-|any|-|Optional. The polygon geometry of the zone in WKT or Polygon.|
+|super_zone|-|string|Variable: `zone_id`|Optional. If there is a hierarchy of zones (e.g., parcels and TAZs), indicates the zone of next higher level.|
+
+
+## link
+
+
+|name|required|type|foreign_key|description|constraints enum|constraints maximum|constraints minimum|warning maximum|warning minimum|warnings maximum|warnings minimum|
+|---|---|---|---|---|---|---|---|---|---|---|---|
+|link_id|True|any|-|Primary key - could be SharedStreets Reference ID|-|-|-|-|-|-|-|
+|parent_link_id|-|any|Variable: `link_id`|Optional. The parent of this link. For example,for a sidewalk, this is the adjacent road.|-|-|-|-|-|-|-|
+|name|-|string|-|Optional. Street or Path Name|-|-|-|-|-|-|-|
+|from_node_id|True|any|Table: `node`, Variable: `node_id`|-|-|-|-|-|-|-|-|
+|to_node_id|True|any|Table: `node`, Variable: `node_id`|-|-|-|-|-|-|-|-|
+|directed|-|boolean|-|Required. Whether the link is directed (travel only occurs from the from_node to the to_node) or undirected.|-|-|-|-|-|-|-|
+|geometry_id|-|any|Table: `geometry`, Variable: `geometry_id`|Optional. Foreign key (Link_Geometry table).|-|-|-|-|-|-|-|
+|geometry|-|any|-|Optional. Link geometry, in well-known text (WKT) format. Optionally, other formats supported by geopandas (GeoJSON, PostGIS) may be used if specified in geometry_field_format in gmns.spec.json|-|-|-|-|-|-|-|
+|dir_flag|-|integer|-|Optional. <br>1  shapepoints go from from_node to to_node;<br>-1 shapepoints go in the reverse direction;<br>0  link is undirected or no geometry information is provided.|Allowed Values: `-1,0,1`|-|-|-|-|-|-|
+|length|-|number|-|Optional. Length of the link in long_length units|-|-|0|-|-|-|-|
+|grade|-|number|-|% grade, negative is downhill|-|100|-100|-|-|25|-25|
+|facility_type|-|string|-|Facility type (e.g., freeway, arterial, etc.)|-|-|-|-|-|-|-|
+|capacity|-|number|-|Optional. Capacity (veh / hr / lane)|-|-|0|-|-|-|-|
+|free_speed|-|number|-|Optional. Free flow speed, in long_length units per hour|-|200|0|-|-|120|1|
+|lanes|-|integer|-|Optional. Number of permanent lanes (not including turn pockets) in the direction of travel open to motor vehicles. It does not include bike lanes, shoulders or parking lanes.|-|-|0|-|-|-|-|
+|bike_facility|-|string|-|Optional. Type of bicycle accommodation: unknown, none, wcl, sharrow, bikelane, cycletrack, offstreet path|Allowed Values: `unknown,none,wcl,sharrow,bikelane,cycletrack,offstreet_path`|-|-|-|-|-|-|
+|ped_facility|-|string|-|Optional. Type of pedestrian accommodation: unknown, none, shoulder, sidewalk, offstreet path|Allowed Values: `unknown,none,shoulder,sidewalk,offstreet_path`|-|-|-|-|-|-|
+|parking|-|string|-|Optional. Type of parking: unknown, none, parallel, angle, other|Allowed Values: `unknown,none,parallel,angle,other`|-|-|-|-|-|-|
+|allowed_uses|-|string|-|Optional. Set of allowed uses that should appear in either the use_definition or use_group tables; comma-separated.|-|-|-|-|-|-|-|
+|toll|-|number|-|Optional.  Toll on the link, in currency units.|-|-|-|10000|0|-|-|
+|jurisdiction|-|string|-|Optional.  Owner/operator of the link.|-|-|-|-|-|-|-|
+|row_width|-|number|-|Optional. Width (short_length units) of the entire right-of-way (both directions).|-|-|0|-|-|-|10|
+
+
+## lane_tod
+
+
+|name|required|type|foreign_key|description|constraints enum|constraints maximum|constraints minimum|
+|---|---|---|---|---|---|---|---|
+|lane_tod_id|True|any|-|Primary key.|-|-|-|
+|lane_id|True|any|Table: `lane`, Variable: `lane_id`|Required. Foreign key to `lane`|-|-|-|
+|timeday_id|-|any|Table: `time_set_definitions`, Variable: `timeday_id`|Conditionally required (either timeday_id or time_day). Foreign key to time_set_definitions.|-|-|-|
+|time_day|-|string|-|Conditionally required (either timeday_id or time_day). XXXXXXXX_HHMM_HHMM, where XXXXXXXX is a bitmap of days of the week, Sunday-Saturday, Holiday. The HHMM are the start and end times.|-|-|-|
+|lane_num|True|integer|-|Required. Lane number identified as offset to the right from the centerline. i.e. -1, 1, 2 (use left-to-rightnumbering).|-|10|-10|
+|allowed_uses|-|string|-|Optional. Set of allowed uses that should appear in either the use_definition or use_group tables; comma-separated.|-|-|-|
+|r_barrier|-|string|-|Optional. Whether a barrier exists to prevent vehicles from changing lanes to the right.<br>- `none` (the default). Indicates that a vehicle can change lanes, provided that the vehicle-type is permitted in the destination lane<br>- `Regulatory`. There is a regulatory prohibition (e.g., a double-white solid line) against changing lanes, but no physical barrier<br>- `Physical`. A physical barrier (e.g., a curb, Jersey barrier) is in place.|Allowed Values: `none,regulatory,physical`|-|-|
+|l_barrier|-|string|-|Optional. Whether a barrier exists to prevent vehicles from changing lanes to the right.<br>- `none` (the default).  Indicates that a vehicle can change lanes, provided that the vehicle-type is permitted in the destination lane<br>- `Regulatory`. There is a regulatory prohibition (e.g., a double-white solid line) against changing lanes, but no physical barrier<br>- `Physical`. A physical barrier (e.g., a curb, Jersey barrier) is in place.|Allowed Values: `none,regulatory,physical`|-|-|
+|width|-|number|-|Optional. Width of the lane, short_length units.|-|-|0|
+
+
+## segment_lane_tod
+
+
+|name|required|type|foreign_key|description|constraints enum|constraints maximum|constraints minimum|
+|---|---|---|---|---|---|---|---|
+|segment_lane_tod_id|True|any|-|Primary key.|-|-|-|
+|segment_lane_id|True|any|Table: `segment_lane`, Variable: `segment_lane_id`|Required. Foreign key, segment_lane table|-|-|-|
+|timeday_id|-|any|Table: `time_set_definitions`, Variable: `timeday_id`|Conditionally required (either timeday_id or time_day). Foreign key to time_set_definitions.|-|-|-|
+|time_day|-|string|-|Conditionally required (either timeday_id or time_day). XXXXXXXX_HHMM_HHMM, where XXXXXXXX is a bitmap of days of the week, Sunday-Saturday, Holiday. The HHMM are the start and end times.|-|-|-|
+|lane_num|True|integer|-|Required. Lane number identified as offset to the right from the centerline. i.e. -1, 1, 2 (use left-to-rightnumbering).|-|10|-10|
+|allowed_uses|-|string|-|Optional. Set of allowed uses that should appear in either the use_definition or use_group tables; comma-separated.|-|-|-|
+|r_barrier|-|string|-|Optional. Whether a barrier exists to prevent vehicles from changing lanes to the right.<br>- `none` (the default). Indicates that a vehicle can change lanes, provided that the vehicle-type is permitted in the destination lane<br>- `Regulatory`. There is a regulatory prohibition (e.g., a double-white solid line) against changing lanes, but no physical barrier<br>- `Physical`. A physical barrier (e.g., a curb, Jersey barrier) is in place.|Allowed Values: `none,regulatory,physical`|-|-|
+|l_barrier|-|string|-|Optional. Whether a barrier exists to prevent vehicles from changing lanes to the right.<br>- `none` (the default). Indicates that a vehicle can change lanes, provided that the vehicle-type is permitted in the destination lane<br>- `Regulatory`. There is a regulatory prohibition (e.g., a double-white solid line) against changing lanes, but no physical barrier<br>- `Physical`. A physical barrier (e.g., a curb, Jersey barrier) is in place.|Allowed Values: `none,regulatory,physical`|-|-|
+|width|-|number|-|Optional. Width of the lane, short_length units.|-|-|0|
+
+
+## signal_phase_mvmt
+
+
+|name|required|type|foreign_key|description|constraints enum|constraints maximum|constraints minimum|
+|---|---|---|---|---|---|---|---|
+|signal_phase_mvmt_id|True|any|-|Primary key.|-|-|-|
+|controller_id|True|any|Table: `signal_controller`, Variable: `controller_id`|Associated controller.|-|-|-|
+|signal_phase_num|True|integer|-|Each phase has one or more Movements associated with it.|-|32|0|
+|mvmt_id|-|any|Table: `movement`, Variable: `mvmt_id`|Foreign key. Either Movement_ID (for phases used by vehicles), or Link_id (for phases used by pedestrians) is required.|-|-|-|
+|link_id|-|any|Table: `link`, Variable: `link_id`|Foreign key. Either Movement_ID (for phases used by vehicles), or Link_id (for phases used by pedestrians) is required.|-|-|-|
+|protection|-|string|-|Optional. Indicates whether the phase is protected, permitted, or right turn on red.|Allowed Values: `protected,permitted,rtor`|-|-|
+
+
+## movement
+
+
+|name|required|type|foreign_key|description|constraints enum|
+|---|---|---|---|---|---|
+|mvmt_id|True|any|-|Primary key.|-|
+|node_id|True|any|Table: `node`, Variable: `node_id`|The node representing the junction.|-|
+|name|-|any|-|Optional.|-|
+|ib_link_id|True|any|Table: `link`, Variable: `link_id`|Inbound link id.|-|
+|start_ib_lane|-|integer|-|Innermost lane number the movement applies to at the inbound end.|-|
+|end_ib_lane|-|integer|-|Outermost lane number the movement applies to at the inbound end. Blank indicates a movement with a single inbound lane.|-|
+|ob_link_id|True|any|Table: `link`, Variable: `link_id`|Outbound link id.|-|
+|start_ob_lane|-|integer|-|Innermost lane number the movement applies to at the outbound end.|-|
+|end_ob_lane|-|integer|-|Outermost lane number the movement applies to at the outbound end. Blank indicates a movement with a single outbound lane.|-|
+|type|True|string|-|Optional. Describes the type of movement (left, right, thru, etc.).|Allowed Values: `left,right,uturn,thru,merge,diverge`|
+|penalty|-|any|-|Turn penalty (seconds)|-|
+|capacity|-|any|-|Capacity in vehicles per hour.|-|
+|ctrl_type|-|any|-|Optional. .|Allowed Values: `no_control,yield,stop,stop_2_way,stop_4_way,signal_with_RTOR,signal`|
+|mvmt_code|-|any|-|Optional. Movement code (e.g., SBL).  Syntax is DDTN, where DD is the direction (e.g., SB, NB, EB, WB, NE, NW, SE, SW). T is the turning movement (e.g., R, L, T) and N is an optional turning movement number (e.g., distinguishing between bearing right and a sharp right at a 6-way intersection)|-|
+|allowed_uses|-|string|-|Optional. Set of allowed uses that should appear in either the use_definition or use_group tables; comma-separated.|-|
+|geometry|-|any|-|Optional. Movement geometry, specific format could be WKT, GeoJSON, etc.|-|
